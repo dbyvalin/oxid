@@ -1,5 +1,5 @@
 {
-    "name": "maxpay/maxpay-module",
+    "name": "dbyvalin/maxpay-oxid-module",
     "description": "This is the Maxpay module for the OXID eShop.",
     "type": "oxideshop-module",
     "keywords": ["oxid", "modules", "eShop", "Maxpay"],
