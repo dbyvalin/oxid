@@ -1,41 +1,25 @@
 <?php
 /**
- * This file is part of OXID eSales PayPal module.
- *
- * OXID eSales PayPal module is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OXID eSales PayPal module is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with OXID eSales PayPal module.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link      http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2018
+ * This file is part of OXID eSales Maxpay module.
  */
 
-namespace OxidEsales\PayPalModule\Core;
+namespace Maxpay\MaxpayModule\Core;
 
 /**
- * PayPal config class
+ * Maxpay config class
  */
 class Config
 {
 
     /**
-     * PayPal payment was triggered via standard checkout by selecting PP as the payment method.
+     * Maxpay payment was triggered via standard checkout by selecting PP as the payment method.
      *
      * @var int
      */
     const OEPAYPAL_ECS = 1;
 
     /**
-     * PayPal payment was triggered by shortcut button in basket step.
+     * Maxpay payment was triggered by shortcut button in basket step.
      *
      * @var int
      */
@@ -56,49 +40,49 @@ class Config
     const PARTNERCODE_SHORTCUT_KEY = 'SHORTCUT';
 
     /**
-     * PayPal module id.
+     * Maxpay module id.
      *
      * @var string
      */
     protected $payPalId = 'oepaypal';
 
     /**
-     * PayPal host.
+     * Maxpay host.
      *
      * @var string
      */
     protected $payPalHost = 'api-3t.paypal.com';
 
     /**
-     * PayPal sandbox host.
+     * Maxpay sandbox host.
      *
      * @var string
      */
     protected $payPalSandboxHost = 'api-3t.sandbox.paypal.com';
 
     /**
-     * PayPal sandbox Url where user must be redirected after his session gets PayPal token.
+     * Maxpay sandbox Url where user must be redirected after his session gets Maxpay token.
      *
      * @var string
      */
     protected $payPalSandboxUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
 
     /**
-     * PayPal Url where user must be redirected after his session gets PayPal token.
+     * Maxpay Url where user must be redirected after his session gets Maxpay token.
      *
      * @var string
      */
     protected $payPalUrl = 'https://www.paypal.com/cgi-bin/webscr';
 
     /**
-     * PayPal sandbox API url.
+     * Maxpay sandbox API url.
      *
      * @var string
      */
     protected $payPalSandboxApiUrl = 'https://api-3t.sandbox.paypal.com/nvp';
 
     /**
-     * PayPal API url.
+     * Maxpay API url.
      *
      * @var string
      */
@@ -126,7 +110,7 @@ class Config
     );
 
     /**
-     * Return PayPal module id.
+     * Return Maxpay module id.
      *
      * @return string
      */
@@ -136,66 +120,66 @@ class Config
     }
 
     /**
-     * Sets PayPal host.
+     * Sets Maxpay host.
      *
      * @param string $payPalHost
      */
-    public function setPayPalHost($payPalHost)
+    public function setMaxpayHost($payPalHost)
     {
         $this->payPalHost = $payPalHost;
     }
 
     /**
-     * Returns PayPal host.
+     * Returns Maxpay host.
      *
      * @return string
      */
-    public function getPayPalHost()
+    public function getMaxpayHost()
     {
-        $host = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sPayPalHost');
+        $host = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sMaxpayHost');
         if ($host) {
-            $this->setPayPalHost($host);
+            $this->setMaxpayHost($host);
         }
 
         return $this->payPalHost;
     }
 
     /**
-     * Sets PayPal sandbox host.
+     * Sets Maxpay sandbox host.
      *
      * @param string $payPalSandboxHost
      */
-    public function setPayPalSandboxHost($payPalSandboxHost)
+    public function setMaxpaySandboxHost($payPalSandboxHost)
     {
         $this->payPalSandboxHost = $payPalSandboxHost;
     }
 
     /**
-     * Returns PayPal sandbox host.
+     * Returns Maxpay sandbox host.
      *
      * @return string
      */
-    public function getPayPalSandboxHost()
+    public function getMaxpaySandboxHost()
     {
-        $host = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sPayPalSandboxHost');
+        $host = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sMaxpaySandboxHost');
         if ($host) {
-            $this->setPayPalSandboxHost($host);
+            $this->setMaxpaySandboxHost($host);
         }
 
         return $this->payPalSandboxHost;
     }
 
     /**
-     * Returns PayPal OR PayPal sandbox host.
+     * Returns Maxpay OR Maxpay sandbox host.
      *
      * @return string
      */
     public function getHost()
     {
         if ($this->isSandboxEnabled()) {
-            $url = $this->getPayPalSandboxHost();
+            $url = $this->getMaxpaySandboxHost();
         } else {
-            $url = $this->getPayPalHost();
+            $url = $this->getMaxpayHost();
         }
 
         return $url;
@@ -206,7 +190,7 @@ class Config
      *
      * @param string $payPalApiUrl
      */
-    public function setPayPalApiUrl($payPalApiUrl)
+    public function setMaxpayApiUrl($payPalApiUrl)
     {
         $this->payPalApiUrl = $payPalApiUrl;
     }
@@ -216,36 +200,36 @@ class Config
      *
      * @return string
      */
-    public function getPayPalApiUrl()
+    public function getMaxpayApiUrl()
     {
-        $url = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sPayPalApiUrl');
+        $url = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sMaxpayApiUrl');
         if ($url) {
-            $this->setPayPalApiUrl($url);
+            $this->setMaxpayApiUrl($url);
         }
 
         return $this->payPalApiUrl;
     }
 
     /**
-     * PayPal sandbox api url setter
+     * Maxpay sandbox api url setter
      *
      * @param string $payPalSandboxApiUrl
      */
-    public function setPayPalSandboxApiUrl($payPalSandboxApiUrl)
+    public function setMaxpaySandboxApiUrl($payPalSandboxApiUrl)
     {
         $this->payPalSandboxApiUrl = $payPalSandboxApiUrl;
     }
 
     /**
-     * PayPal sandbox api url getter
+     * Maxpay sandbox api url getter
      *
      * @return string
      */
-    public function getPayPalSandboxApiUrl()
+    public function getMaxpaySandboxApiUrl()
     {
-        $url = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sPayPalSandboxApiUrl');
+        $url = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sMaxpaySandboxApiUrl');
         if ($url) {
-            $this->setPayPalSandboxApiUrl($url);
+            $this->setMaxpaySandboxApiUrl($url);
         }
 
         return $this->payPalSandboxApiUrl;
@@ -259,75 +243,75 @@ class Config
     public function getApiUrl()
     {
         if ($this->isSandboxEnabled()) {
-            $url = $this->getPayPalSandboxApiUrl();
+            $url = $this->getMaxpaySandboxApiUrl();
         } else {
-            $url = $this->getPayPalApiUrl();
+            $url = $this->getMaxpayApiUrl();
         }
 
         return $url;
     }
 
     /**
-     * PayPal Url Setter
+     * Maxpay Url Setter
      *
      * @param string $payPalUrl
      */
-    public function setPayPalUrl($payPalUrl)
+    public function setMaxpayUrl($payPalUrl)
     {
         $this->payPalUrl = $payPalUrl;
     }
 
     /**
-     * PayPal sandbox url setter
+     * Maxpay sandbox url setter
      *
      * @param string $payPalSandboxUrl
      */
-    public function setPayPalSandboxUrl($payPalSandboxUrl)
+    public function setMaxpaySandboxUrl($payPalSandboxUrl)
     {
         $this->payPalSandboxUrl = $payPalSandboxUrl;
     }
 
     /**
-     * PayPal sandbox url getter
+     * Maxpay sandbox url getter
      *
      * @return string
      */
-    public function getPayPalUrl()
+    public function getMaxpayUrl()
     {
-        $url = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sPayPalUrl');
+        $url = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sMaxpayUrl');
         if ($url) {
-            $this->setPayPalUrl($url);
+            $this->setMaxpayUrl($url);
         }
 
         return $this->payPalUrl;
     }
 
     /**
-     * PayPal sandbox url getter
+     * Maxpay sandbox url getter
      *
      * @return string
      */
-    public function getPayPalSandboxUrl()
+    public function getMaxpaySandboxUrl()
     {
-        $url = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sPayPalSandboxUrl');
+        $url = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sMaxpaySandboxUrl');
         if ($url) {
-            $this->setPayPalSandboxUrl($url);
+            $this->setMaxpaySandboxUrl($url);
         }
 
         return $this->payPalSandboxUrl;
     }
 
     /**
-     * Get PayPal url.
+     * Get Maxpay url.
      *
      * @return string
      */
     public function getUrl()
     {
         if ($this->isSandboxEnabled()) {
-            $url = $this->getPayPalSandboxUrl();
+            $url = $this->getMaxpaySandboxUrl();
         } else {
-            $url = $this->getPayPalUrl();
+            $url = $this->getMaxpayUrl();
         }
 
         return $url;
@@ -411,7 +395,7 @@ class Config
      *
      * @return string
      */
-    public function getPayPalCommunicationUrl($token = null, $userAction = 'continue')
+    public function getMaxpayCommunicationUrl($token = null, $userAction = 'continue')
     {
         return $this->getUrl() . '&cmd=_express-checkout&token=' . (string) $token . '&useraction=' . (string) $userAction;
     }
@@ -441,13 +425,13 @@ class Config
     }
 
     /**
-     * Methods checks if sending of IPN callback url to PayPal is supressed by configuration.
+     * Methods checks if sending of IPN callback url to Maxpay is supressed by configuration.
      *
      * @return bool
      */
     public function suppressIPNCallbackUrl()
     {
-        return (bool) \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('OEPayPalDisableIPN');
+        return (bool) \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('OEMaxpayDisableIPN');
     }
 
 
@@ -497,9 +481,9 @@ class Config
     }
 
     /**
-     * @deprecated in dev-master (2018-04-27); Use OxidEsales\PayPalModule\Core\IPnConfig::getIPNResponseUrl()
+     * @deprecated in dev-master (2018-04-27); Use OxidEsales\MaxpayModule\Core\IPnConfig::getIPNResponseUrl()
      *
-     * Returns Url for IPN response call to notify PayPal
+     * Returns Url for IPN response call to notify Maxpay
      *
      * @return string
      */
@@ -523,9 +507,9 @@ class Config
      *
      * @return integer
      */
-    public function getMaxPayPalDeliveryAmount()
+    public function getMaxMaxpayDeliveryAmount()
     {
-        $maxDeliveryAmount = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('dMaxPayPalDeliveryAmount');
+        $maxDeliveryAmount = \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('dMaxMaxpayDeliveryAmount');
         if (!$maxDeliveryAmount) {
             $maxDeliveryAmount = $this->maxDeliveryAmount;
         }
@@ -555,7 +539,7 @@ class Config
      */
     public function isDeviceMobile()
     {
-        $userAgent = oxNew(\OxidEsales\PayPalModule\Core\UserAgent::class);
+        $userAgent = oxNew(\OxidEsales\MaxpayModule\Core\UserAgent::class);
 
         return ($userAgent->getDeviceType() == 'mobile');
     }
@@ -567,7 +551,7 @@ class Config
      */
     public function getMobileECDefaultShippingId()
     {
-        return \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sOEPayPalMECDefaultShippingId');
+        return \OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('sOEMaxpayMECDefaultShippingId');
     }
 
     /**

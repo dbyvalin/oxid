@@ -89,8 +89,8 @@ class PaymentGateway extends PaymentGateway_parent
         $success = parent::executePayment($amount, $order);
         $session = \OxidEsales\Eshop\Core\Registry::getSession();
 
-        if ( ($session->getVariable('paymentid') == 'oxidpaypal')
-             || ($session->getBasket()->getPaymentId() == 'oxidpaypal')
+        if ( ($session->getVariable('paymentid') == 'oxidmaxpay')
+             || ($session->getBasket()->getPaymentId() == 'oxidmaxpay')
         ) {
             $this->setPayPalOxOrder($order);
             $success = $this->doExpressCheckoutPayment();
