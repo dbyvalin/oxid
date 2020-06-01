@@ -25,10 +25,6 @@ class ThankYouController extends ThankYouController_parent
     
     public function checkOrderProcessing()
     {
-        $order = $this->getOrder();
-        $order->changeOrderStatus(self::MAXPAY_PAYMENT_OK);
-        return true;
-        
         if (!$_POST) {
             return false;
         }
