@@ -1,47 +1,31 @@
 <?php
 /**
- * This file is part of OXID eSales PayPal module.
- *
- * OXID eSales PayPal module is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OXID eSales PayPal module is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with OXID eSales PayPal module.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link      http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2018
+ * This file is part of OXID eSales Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Controller;
 
 /**
- * PayPal Wrapping class
+ * Maxpay Wrapping class
  *
  * @mixin \OxidEsales\Eshop\Application\Controller\WrappingController
  */
 class WrappingController extends WrappingController_parent
 {
     /**
-     * Checks if payment action is processed by PayPal
+     * Checks if payment action is processed by Maxpay
      *
      * @return bool
      */
-    public function isPayPal()
+    public function isMaxpay()
     {
         $session = \OxidEsales\Eshop\Core\Registry::getSession();
-        return ($session->getVariable("paymentid") == "oxidpaypal") ? true : false;
+        return ($session->getVariable("paymentid") == "oxidmaxpay") ? true : false;
     }
 
     /**
-     * Detects is current payment must be processed by PayPal and instead of standard validation
-     * redirects to standard PayPal dispatcher
+     * Detects is current payment must be processed by Maxpay and instead of standard validation
+     * redirects to standard Maxpay dispatcher
      *
      * @return bool
      */
@@ -49,12 +33,12 @@ class WrappingController extends WrappingController_parent
     {
         $return = parent::changeWrapping();
 
-        // in case user adds wrapping, basket info must be resubmitted..
-        if ($this->isPayPal()) {
+        // in case user adds wrapping, basket info must be resubmitted.
+        if ($this->isMaxpay()) {
             $session = \OxidEsales\Eshop\Core\Registry::getSession();
-            $payPalType = (int) $session->getVariable("oepaypal");
+            $maxpayType = (int) $session->getVariable("maxpay");
 
-            if ($payPalType == 1) {
+            if ($maxpayType == 1) {
                 $return = "payment";
             } else {
                 $return = "basket";

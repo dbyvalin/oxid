@@ -1,82 +1,37 @@
 <?php
 /**
- * This file is part of OXID eSales PayPal module.
- *
- * OXID eSales PayPal module is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OXID eSales PayPal module is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with OXID eSales PayPal module.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link      http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2018
+ * This file is part of OXID eSales Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Model;
 
 /**
- * PayPal oxUser class.
+ * Maxpay oxUser class.
  *
  * @mixin \OxidEsales\Eshop\Application\Model\User
  */
 class User extends User_parent
 {
     /**
-     * CallBack user mode
-     *
-     * @var bool
+     * Retrieve User details.
+     * @return array
      */
-    protected $callBackUser = false;
-
-    /**
-     * Check if exist real user (with password) for passed email
-     *
-     * @param string $userEmail - email
-     *
-     * @return bool
-     */
-    public function isRealPayPalUser($userEmail)
+    public function getDetails(): array
     {
-        $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
-        $query = "SELECT `oxid` FROM `oxuser` WHERE `oxusername` = " . $db->quote($userEmail) . " AND `oxpassword` != ''";
-        if (!\OxidEsales\Eshop\Core\Registry::getConfig()->getConfigParam('blMallUsers')) {
-            $query .= $this->getShopIdQueryPart();
-        }
-        if ($userId = $db->getOne($query)) {
-            return $userId;
-        }
-
-        return false;
+        $details = [
+            'customer_id' => $this->oxuser__oxcustnr->value,
+            'email' => $this->oxuser__oxusername->value,
+            'firstname' => $this->oxuser__oxfname->value,
+            'lastname' => $this->oxuser__oxlname->value,
+            'address' => $this->oxuser__oxstreet->value . ' ' . $this->oxuser__oxstreetnr->value,
+            'city' => $this->oxuser__oxcity->value,
+            'zip' => $this->oxuser__oxzip->value,
+            'country' => $this->oxuser__oxcountry->value,
+        ];
+        
+        return $details;
     }
-
-    /**
-     * Check if the shop user is the same as PayPal user.
-     * Fields: first name, last name, street, street nr, city - must be equal.
-     *
-     * @param \OxidEsales\PayPalModule\Model\Response\ResponseGetExpressCheckoutDetails $details - data returned from PayPal
-     *
-     * @return bool
-     */
-    public function isSamePayPalUser($details)
-    {
-        $userData = array();
-        $userData[] = \OxidEsales\Eshop\Core\Str::getStr()->html_entity_decode($this->oxuser__oxfname->value);
-        $userData[] = \OxidEsales\Eshop\Core\Str::getStr()->html_entity_decode($this->oxuser__oxlname->value);
-
-        $compareData = array();
-        $compareData[] = $details->getFirstName();
-        $compareData[] = $details->getLastName();
-
-        return (($userData == $compareData) && $this->isSameAddressPayPalUser($details));
-    }
-
+    
     /**
      * Check if the shop user address is the same in PayPal.
      * Fields: street, street nr, city - must be equal.

@@ -1,43 +1,20 @@
 <?php
 /**
- * This file is part of OXID eSales PayPal module.
- *
- * OXID eSales PayPal module is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OXID eSales PayPal module is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with OXID eSales PayPal module.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link      http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2018
+ * This file is part of OXID eSales Maxpay module.
  */
 namespace Maxpay\MaxpayModule\Controller;
 
 /**
- * Abstract PayPal Dispatcher class
+ * Abstract Maxpay Dispatcher class
  */
 abstract class Dispatcher extends \Maxpay\MaxpayModule\Controller\FrontendController
 {
     /**
-     * Service type identifier - Standard Checkout = 1
+     * Maxpay checkout service
      *
-     * @var int
+     * @var \Maxpay\MaxpayModule\Core\MaxpayService
      */
-    protected $serviceType = 1;
-
-    /**
-     * PayPal checkout service
-     *
-     * @var \OxidEsales\PayPalModule\Core\PayPalService
-     */
-    protected $payPalCheckoutService;
+    protected $maxpayCheckoutService;
 
     /**
      * Default user action for checkout process
@@ -47,64 +24,27 @@ abstract class Dispatcher extends \Maxpay\MaxpayModule\Controller\FrontendContro
     protected $userAction = "continue";
 
     /**
-     * Executes "GetExpressCheckoutDetails" and on SUCCESS response - saves
-     * user information and redirects to order page, on failure - sets error
-     * message and redirects to basket page
-     */
-    abstract public function getExpressCheckoutDetails();
-
-    /**
-     * Sets PayPal checkout service.
+     * Sets Maxpay checkout service.
      *
-     * @param \OxidEsales\PayPalModule\Core\PayPalService $payPalCheckoutService
+     * @param \Maxpay\MaxpayModule\Core\MaxpayService $maxpayCheckoutService
      */
-    public function setPayPalCheckoutService($payPalCheckoutService)
+    public function setMaxpayCheckoutService($maxpayCheckoutService)
     {
-        $this->payPalCheckoutService = $payPalCheckoutService;
+        $this->maxpayCheckoutService = $maxpayCheckoutService;
     }
 
     /**
-     * Returns PayPal service
+     * Returns Maxpay service
      *
-     * @return \OxidEsales\PayPalModule\Core\PayPalService
+     * @return \Maxpay\MaxpayModule\Core\MaxpayService
      */
-    public function getPayPalCheckoutService()
+    public function getMaxpayCheckoutService()
     {
-        if ($this->payPalCheckoutService === null) {
-            $this->payPalCheckoutService = oxNew(\Maxpay\MaxpayModule\Core\PayPalService::class);
+        if ($this->maxpayCheckoutService === null) {
+            $this->maxpayCheckoutService = oxNew(\Maxpay\MaxpayModule\Core\MaxpayService::class);
         }
 
-        return $this->payPalCheckoutService;
-    }
-
-    /**
-     * @return  \OxidEsales\Eshop\Core\UtilsView
-     */
-    protected function getUtilsView()
-    {
-        return \OxidEsales\Eshop\Core\Registry::getUtilsView();
-    }
-
-    /**
-     * Formats given float/int value into PayPal friendly form
-     *
-     * @param float $in value to format
-     *
-     * @return string
-     */
-    protected function formatFloat($in)
-    {
-        return sprintf("%.2f", $in);
-    }
-
-    /**
-     * Returns oxUtils instance
-     *
-     * @return  \OxidEsales\Eshop\Core\Utils
-     */
-    protected function getUtils()
-    {
-        return \OxidEsales\Eshop\Core\Registry::getUtils();
+        return $this->maxpayCheckoutService;
     }
 
     /**
@@ -122,28 +62,28 @@ abstract class Dispatcher extends \Maxpay\MaxpayModule\Controller\FrontendContro
     }
 
     /**
-     * Returns PayPal order object
+     * Returns Maxpay order object
      *
      * @return \OxidEsales\Eshop\Application\Model\Order|null
      */
-    protected function getPayPalOrder()
+    protected function getMaxpayOrder()
     {
         $order = oxNew(\OxidEsales\Eshop\Application\Model\Order::class);
-        if ($order->loadPayPalOrder()) {
+        if ($order->loadMaxpayOrder()) {
             return $order;
         }
     }
 
     /**
-     * Returns PayPal payment object
+     * Returns Maxpay payment object
      *
      * @return \OxidEsales\Eshop\Application\Model\Payment|null
      */
-    protected function getPayPalPayment()
+    protected function getMaxpayPayment()
     {
         $userPayment = null;
 
-        if (($order = $this->getPayPalOrder())) {
+        if (($order = $this->getMaxpayOrder())) {
             $userPayment = oxNew(\OxidEsales\Eshop\Application\Model\UserPayment::class);
             $userPayment->load($order->oxorder__oxpaymentid->value);
         }

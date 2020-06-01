@@ -30,6 +30,7 @@ $aModule = array(
         \OxidEsales\Eshop\Application\Controller\WrappingController::class    => \Maxpay\MaxpayModule\Controller\WrappingController::class,
         \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class       => \Maxpay\MaxpayModule\Controller\Admin\OrderList::class,
         \OxidEsales\Eshop\Application\Controller\Admin\DeliverySetMain::class => \Maxpay\MaxpayModule\Controller\Admin\DeliverySetMain::class,
+        \OxidEsales\Eshop\Application\Controller\ThankYouController::class    => \Maxpay\MaxpayModule\Controller\ThankYouController::class,
         \OxidEsales\Eshop\Application\Model\Address::class                    => \Maxpay\MaxpayModule\Model\Address::class,
         \OxidEsales\Eshop\Application\Model\User::class                       => \Maxpay\MaxpayModule\Model\User::class,
         \OxidEsales\Eshop\Application\Model\Order::class                      => \Maxpay\MaxpayModule\Model\Order::class,
@@ -50,6 +51,7 @@ $aModule = array(
     'blocks' => array(
         array('template' => 'deliveryset_main.tpl',               'block'=>'admin_deliveryset_main_form',           'file'=>'/views/blocks/deliveryset_main.tpl'),
         array('template' => 'page/checkout/payment.tpl',          'block'=>'select_payment',                        'file'=>'/views/blocks/page/checkout/maxpaypaymentselector.tpl'),
+        array('template' => 'page/checkout/thankyou.tpl',         'block'=>'checkout_thankyou_proceed',             'file'=>'/views/tpl/thankyou.tpl'),
         array('template' => 'order_list.tpl',                     'block'=>'admin_order_list_filter',               'file'=>'/views/blocks/maxpayorder_list_filter_actions.tpl'),
         array('template' => 'order_list.tpl',                     'block'=>'admin_order_list_sorting',              'file'=>'/views/blocks/maxpayorder_list_sorting_actions.tpl'),
         array('template' => 'order_list.tpl',                     'block'=>'admin_order_list_item',                 'file'=>'/views/blocks/maxpayorder_list_items_actions.tpl'),

@@ -1,52 +1,30 @@
 <?php
 /**
- * This file is part of OXID eSales PayPal module.
- *
- * OXID eSales PayPal module is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * OXID eSales PayPal module is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with OXID eSales PayPal module.  If not, see <http://www.gnu.org/licenses/>.
- *
- * @link      http://www.oxid-esales.com
- * @copyright (C) OXID eSales AG 2003-2018
+ * This file is part of OXID eSales Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Model;
 
 /**
- * PayPal oxOrder class
+ * Maxpay oxOrder class
  *
  * @mixin \OxidEsales\Eshop\Application\Model\Order
  */
 class Order extends Order_parent
 {
-    /** Transaction was finished successfully. */
-    const OEPAYPAL_TRANSACTION_STATUS_OK = 'OK';
-
-    /** Transaction is not finished or failed. */
-    const OEPAYPAL_TRANSACTION_STATUS_NOT_FINISHED = 'NOT_FINISHED';
-
     /**
-     * PayPal order information
+     * Maxpay order information
      *
-     * @var \OxidEsales\PayPalModule\Model\PayPalOrder
+     * @var \Maxpay\MaxpayModule\Model\MaxpayOrder
      */
-    protected $payPalOrder = null;
+    protected $maxpayOrder = null;
 
     /**
-     * Loads order associated with current PayPal order
+     * Loads order associated with current Maxpay order
      *
      * @return bool
      */
-    public function loadPayPalOrder()
+    public function loadMaxpayOrder()
     {
         $orderId = \OxidEsales\Eshop\Core\Registry::getSession()->getVariable("sess_challenge");
 
@@ -66,7 +44,7 @@ class Order extends Order_parent
      *
      * @return bool
      */
-    public function oePayPalUpdateOrderNumber()
+    public function maxpayUpdateOrderNumber()
     {
         if ($this->oxorder__oxordernr->value) {
             $updated = (bool) oxNew(\OxidEsales\Eshop\Core\Counter::class)->update($this->_getCounterIdent(), $this->oxorder__oxordernr->value);
@@ -78,42 +56,11 @@ class Order extends Order_parent
     }
 
     /**
-     * Delete order created by current PayPal ordering process
-     *
-     * @return bool
-     */
-    public function deletePayPalOrder()
-    {
-        $result = false;
-        if ($this->loadPayPalOrder()) {
-            $this->getPayPalOrder()->delete();
-
-            $result = $this->delete();
-        }
-
-        return $result;
-    }
-
-    /**
-     * Delete order together with PayPal order data.
-     *
-     * @param string $oxId
-     *
-     * @return bool
-     */
-    public function delete($oxId = null)
-    {
-        $this->getPayPalOrder($oxId)->delete();
-
-        return parent::delete($oxId);
-    }
-
-    /**
      * Updates order transaction status, ID and date.
      *
      * @param string $transactionId Order transaction ID
      */
-    protected function setPaymentInfoPayPalOrder($transactionId)
+    protected function setPaymentInfoMaxpayOrder($transactionId)
     {
         // set transaction ID and payment date to order
         $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
@@ -126,62 +73,15 @@ class Order extends Order_parent
     }
 
     /**
-     * Finalizes PayPal order.
+     * Finalizes Maxpay order.
      *
-     * @param \OxidEsales\PayPalModule\Model\Response\ResponseDoExpressCheckoutPayment $result          PayPal results array.
      * @param \OxidEsales\Eshop\Application\Model\Basket                               $basket          Basket object.
-     * @param string                                                                   $transactionMode Transaction mode Sale|Authorization.
      */
-    public function finalizePayPalOrder($result, $basket, $transactionMode)
+    public function finalizeMaxpayOrder($basket)
     {
-        $utilsDate = \OxidEsales\Eshop\Core\Registry::getUtilsDate();
-        $date = date('Y-m-d H:i:s', $utilsDate->getTime());
-
-        // set order status, transaction ID and payment date to order
-        $this->setPaymentInfoPayPalOrder($result->getTransactionId());
-
-        $currency = $result->getCurrencyCode();
-        if (!$currency) {
-            $currency = $this->getOrderCurrency()->name;
-        }
-
-        // PayPal order info
-        $payPalOrder = $this->getPayPalOrder();
-        $payPalOrder->setOrderId($this->getId());
-        $payPalOrder->setPaymentStatus('pending');
-        $payPalOrder->setTransactionMode($transactionMode);
-        $payPalOrder->setCurrency($currency);
-        $payPalOrder->setTotalOrderSum($basket->getPrice()->getBruttoPrice());
-        if ($transactionMode == 'Sale') {
-            $payPalOrder->setCapturedAmount($basket->getPrice()->getBruttoPrice());
-        }
-        $payPalOrder->save();
-
-        $orderPayment = oxNew(\OxidEsales\PayPalModule\Model\OrderPayment::class);
-        $orderPayment->setTransactionId($result->getTransactionId());
-        $orderPayment->setCorrelationId($result->getCorrelationId());
-        $orderPayment->setDate($date);
-        $orderPayment->setAction(($transactionMode == 'Sale') ? 'capture' : 'authorization');
-        $orderPayment->setStatus($result->getPaymentStatus());
-        $orderPayment->setAmount($result->getAmount());
-        $orderPayment->setCurrency($result->getCurrencyCode());
-
-        //Adding payment information
-        $paymentList = $this->getPayPalOrder()->getPaymentList();
-        $paymentList->addPayment($orderPayment);
-
-        //setting order payment status after
-        $paymentStatusCalculator = oxNew(\OxidEsales\PayPalModule\Model\OrderPaymentStatusCalculator::class);
-        $paymentStatusCalculator->setOrder($this->getPayPalOrder());
-        $this->getPayPalOrder()->setPaymentStatus($paymentStatusCalculator->getStatus(), $this);
-        $this->getPayPalOrder()->save();
-
-        //clear PayPal identification
-        $session = \OxidEsales\Eshop\Core\Registry::getSession();
-        $session->deleteVariable('oepaypal');
-        $session->deleteVariable("oepaypal-payerId");
-        $session->deleteVariable("oepaypal-userId");
-        $session->deleteVariable('oepaypal-basketAmount');
+        $maxpayOrder = $this->getMaxpayOrder();
+        $maxpayOrder->setPaymentStatus(self::MAXPAY_PAYMENT_AWAITING);
+        $maxpayOrder->save();
     }
 
     /**
@@ -206,7 +106,7 @@ class Order extends Order_parent
      */
     public function markOrderPaid()
     {
-        parent::_setOrderStatus(self::OEPAYPAL_TRANSACTION_STATUS_OK);
+        parent::_setOrderStatus(self::MAXPAY_PAYMENT_OK);
 
         $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
         $utilsDate = \OxidEsales\Eshop\Core\Registry::getUtilsDate();
@@ -218,7 +118,12 @@ class Order extends Order_parent
         //updating order object
         $this->oxorder__oxpaid = new \OxidEsales\Eshop\Core\Field($date);
     }
-
+    
+    public function changeOrderStatus(string $status)
+    {
+        parent::_setOrderStatus($status);
+    }
+    
     /**
      * Checks if delivery set used for current order is available and active.
      * Throws exception if not available
@@ -329,5 +234,24 @@ class Order extends Order_parent
         }
 
         return $valid;
+    }
+
+    /**
+     * Returns Maxpay order object.
+     *
+     * @param string $oxId
+     *
+     * @return \Maxpay\MaxpayModule\Model\MaxpayOrder|null
+     */
+    public function getMaxpayOrder($oxId = null)
+    {
+        if (is_null($this->maxpayOrder)) {
+            $orderId = is_null($oxId) ? $this->getId() : $oxId;
+            $order = oxNew(\Maxpay\MaxpayModule\Model\MaxpayOrder::class);
+            $order->load($orderId);
+            $this->maxpayOrder = $order;
+        }
+
+        return $this->maxpayOrder;
     }
 }
