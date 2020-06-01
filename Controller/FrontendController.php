@@ -19,6 +19,11 @@ class FrontendController extends \OxidEsales\Eshop\Application\Controller\Fronte
      */
     protected $maxpayConfig = null;
 
+    public function postback()
+    {
+        echo 'postback processing here';
+    }
+    
     /**
      * Return Maxpay logger
      *
@@ -36,7 +41,7 @@ class FrontendController extends \OxidEsales\Eshop\Application\Controller\Fronte
     }
 
     /**
-     * Return Maxpay config
+     * Return Maxpay config.
      *
      * @return \Maxpay\MaxpayModule\Core\Config
      */
@@ -50,7 +55,7 @@ class FrontendController extends \OxidEsales\Eshop\Application\Controller\Fronte
     }
 
     /**
-     * Set Maxpay config
+     * Set Maxpay config.
      *
      * @param \Maxpay\MaxpayModule\Core\Config $maxpayConfig config
      */

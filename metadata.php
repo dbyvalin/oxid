@@ -25,19 +25,17 @@ $aModule = array(
     'email'        => 'admin@maxpay.com',
     'extend'       => array(
         \OxidEsales\Eshop\Core\ViewConfig::class                              => \Maxpay\MaxpayModule\Core\ViewConfig::class,
-        \OxidEsales\Eshop\Application\Controller\OrderController::class       => \Maxpay\MaxpayModule\Controller\OrderController::class,
         \OxidEsales\Eshop\Application\Controller\PaymentController::class     => \Maxpay\MaxpayModule\Controller\PaymentController::class,
         \OxidEsales\Eshop\Application\Controller\WrappingController::class    => \Maxpay\MaxpayModule\Controller\WrappingController::class,
-        \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class       => \Maxpay\MaxpayModule\Controller\Admin\OrderList::class,
-        \OxidEsales\Eshop\Application\Controller\Admin\DeliverySetMain::class => \Maxpay\MaxpayModule\Controller\Admin\DeliverySetMain::class,
         \OxidEsales\Eshop\Application\Controller\ThankYouController::class    => \Maxpay\MaxpayModule\Controller\ThankYouController::class,
+        \OxidEsales\Eshop\Application\Controller\FrontendController::class    => \Maxpay\MaxpayModule\Controller\FrontendController::class,
         \OxidEsales\Eshop\Application\Model\User::class                       => \Maxpay\MaxpayModule\Model\User::class,
         \OxidEsales\Eshop\Application\Model\Order::class                      => \Maxpay\MaxpayModule\Model\Order::class,
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class             => \Maxpay\MaxpayModule\Model\PaymentGateway::class,
     ),
     'controllers' => array(
         'maxpaystandarddispatcher'        => \Maxpay\MaxpayModule\Controller\StandardDispatcher::class,
-        'maxpayorder_maxpay'              => \Maxpay\MaxpayModule\Controller\Admin\OrderController::class
+        'maxpayorder'                     => \Maxpay\MaxpayModule\Controller\FrontendController::class
     ),
     'events'       => array(
         'onActivate'   => '\Maxpay\MaxpayModule\Core\Events::onActivate',

@@ -24,7 +24,7 @@ class Order extends Order_parent
      *
      * @return bool
      */
-    public function loadMaxpayOrder()
+    public function loadMaxpayOrder(): bool
     {
         $orderId = \OxidEsales\Eshop\Core\Registry::getSession()->getVariable("sess_challenge");
 

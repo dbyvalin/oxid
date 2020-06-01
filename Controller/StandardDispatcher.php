@@ -5,14 +5,14 @@
 namespace Maxpay\MaxpayModule\Controller;
 
 /**
- * PayPal Standard Checkout dispatcher class
+ * Maxpay Standard Checkout dispatcher class
  */
 class StandardDispatcher extends \Maxpay\MaxpayModule\Controller\Dispatcher
 {
     /**
      * @return string
      */
-    public function setCheckout()
+    public function setCheckout(): string
     {
         $session = \OxidEsales\Eshop\Core\Registry::getSession();
         $session->setVariable("maxpay", "1");
