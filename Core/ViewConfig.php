@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Core;
@@ -16,43 +16,27 @@ class ViewConfig extends ViewConfig_parent
     protected $maxpayConfig = null;
 
     /**
-     * Maxpay payment object.
-     *
-     * @var \OxidEsales\Eshop\Application\Model\Payment|bool
-     */
-    protected $maxpayPayment = null;
-
-    /**
-     * Returns Maxpay payment object.
-     *
-     * @return \OxidEsales\Eshop\Application\Model\Payment
-     */
-    public function getMaxpayPayment()
-    {
-        if ($this->maxpayPayment === null) {
-            $this->maxpayPayment = false;
-            $maxpayPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
-
-            // payment is not available/active?
-            if ($maxpayPayment->load("oxidmaxpay") && $maxpayPayment->oxpayments__oxactive->value) {
-                $this->maxpayPayment = $maxpayPayment;
-            }
-        }
-
-        return $this->maxpayPayment;
-    }
-
-    /**
      * Returns Maxpay config.
      *
      * @return \Maxpay\MaxpayModule\Core\Config
      */
-    protected function getMaxpayConfig()
+    protected function getMaxpayConfig(): \Maxpay\MaxpayModule\Core\Config
     {
         if (is_null($this->maxpayConfig)) {
             $this->maxpayConfig = oxNew(\Maxpay\MaxpayModule\Core\Config::class);
         }
 
         return $this->maxpayConfig;
+    }
+    
+    /**
+     * Retrieve order status.
+     * @param string $orderId
+     * @return string
+     */
+    public function isOrderRefunded(string $orderId): string
+    {
+        $order = oxNew(\OxidEsales\Eshop\Application\Model\Order::class)->getMaxpayOrder($orderId);
+        return $order->getOrderStatus() === $order::MAXPAY_PAYMENT_REFUNDED;
     }
 }

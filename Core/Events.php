@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Core;
@@ -10,11 +10,11 @@ namespace Maxpay\MaxpayModule\Core;
  */
 class Events
 {
-
     /**
      * Add Maxpay payment method set EN and DE long descriptions
+     * @return void
      */
-    public static function addPaymentMethod()
+    public static function addPaymentMethod(): void
     {
         $paymentDescriptions = array(
             'en' => '<div>When selecting this payment method you are being redirected to Maxpay where you can do your order payment.</div>',
@@ -52,7 +52,7 @@ class Events
      *
      * @return bool
      */
-    public static function isMaxpayActiveOnSubShops()
+    public static function isMaxpayActiveOnSubShops(): bool
     {
         $active = false;
         $config = \OxidEsales\Eshop\Core\Registry::getConfig();
@@ -75,9 +75,10 @@ class Events
     }
 
     /**
-     * Disables Maxpay payment method
+     * Disables Maxpay payment method.
+     * @return void
      */
-    public static function disablePaymentMethod()
+    public static function disablePaymentMethod(): void
     {
         $payment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
         if ($payment->load('oxidmaxpay')) {
@@ -87,9 +88,10 @@ class Events
     }
 
     /**
-     * Activates Maxpay payment method
+     * Activates Maxpay payment method.
+     * @return void
      */
-    public static function enablePaymentMethod()
+    public static function enablePaymentMethod(): void
     {
         $payment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
         $payment->load('oxidmaxpay');
@@ -98,9 +100,10 @@ class Events
     }
 
     /**
-     * Execute action on activate event
+     * Execute action on activate event.
+     * @return void
      */
-    public static function onActivate()
+    public static function onActivate(): void
     {
         // adding record to oxPayment table
         self::addPaymentMethod();
@@ -110,26 +113,16 @@ class Events
     }
 
     /**
-     * Delete the basket object, which is saved in the session, as it is an instance of \OxidEsales\PayPalModule\Model\Basket
-     * and it is no longer a valid object after the module has been deactivated.
-     */
-    public static function deleteSessionBasket()
-    {
-        \OxidEsales\Eshop\Core\Registry::getSession()->delBasket();
-    }
-
-    /**
-     * Execute action on deactivate event
+     * Execute action on deactivate event.
      *
      * @return null
      */
     public static function onDeactivate()
     {
-        // If Maxpay is activated on other sub shops do not remove payment method
+        // If Maxpay is activated on other sub shops - do not remove payment method
         if ('EE' == \OxidEsales\Eshop\Core\Registry::getConfig()->getEdition() && self::isMaxpayActiveOnSubShops()) {
             return;
         }
         self::disablePaymentMethod();
-        self::deleteSessionBasket();
     }
 }

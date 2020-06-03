@@ -1,15 +1,16 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 namespace Maxpay\MaxpayModule\Controller;
 
 /**
- * Maxpay Standard Checkout dispatcher class
+ * Maxpay Standard Checkout dispatcher class.
  */
-class StandardDispatcher extends \Maxpay\MaxpayModule\Controller\Dispatcher
+class StandardDispatcher extends MaxpayFrontendController
 {
     /**
+     * Maxpay checkout processing.
      * @return string
      */
     public function setCheckout(): string
@@ -24,7 +25,6 @@ class StandardDispatcher extends \Maxpay\MaxpayModule\Controller\Dispatcher
             $basket->calculateBasket(true);
 
         } catch (\OxidEsales\Eshop\Core\Exception\StandardException $excp) {
-            // return to basket view
             return "basket";
         }
         

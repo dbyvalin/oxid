@@ -1,12 +1,12 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Core;
 
 /**
- * Base logger class
+ * Base logger class.
  */
 class Logger
 {
@@ -21,13 +21,14 @@ class Logger
      * Log title
      */
     protected $logTitle = '';
-
+    
     /**
      * Sets logger session id.
      *
      * @param string $id session id
+     * @return void
      */
-    public function setLoggerSessionId($id)
+    public function setLoggerSessionId($id): void
     {
         $this->loggerSessionId = $id;
     }
@@ -37,7 +38,7 @@ class Logger
      *
      * @return string
      */
-    public function getLoggerSessionId()
+    public function getLoggerSessionId(): string
     {
         return $this->loggerSessionId;
     }
@@ -47,7 +48,7 @@ class Logger
      *
      * @return string
      */
-    protected function getLogFilePath()
+    protected function getLogFilePath(): string
     {
         $logDirectoryPath = \OxidEsales\Eshop\Core\Registry::getConfig()->getLogsDir();
 
@@ -57,9 +58,10 @@ class Logger
     /**
      * Set log title.
      *
-     * @param string $title Log title
+     * @param string $title
+     * @return void
      */
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->logTitle = $title;
     }
@@ -69,7 +71,7 @@ class Logger
      *
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->logTitle;
     }
@@ -77,11 +79,13 @@ class Logger
     /**
      * Writes log message.
      *
-     * @param mixed $logData logger data
+     * @param mixed $logData Logger data.
+     * @return void
      */
-    public function log($logData)
+    public function log($logData): void
     {
         $handle = fopen($this->getLogFilePath(), "a+");
+        
         if ($handle !== false) {
             if (is_string($logData)) {
                 parse_str($logData, $result);

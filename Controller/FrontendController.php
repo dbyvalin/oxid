@@ -1,78 +1,50 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 namespace Maxpay\MaxpayModule\Controller;
 
 /**
- * Main Maxpay controller
+ * Main Maxpay Frontend controller
  */
-class FrontendController extends \OxidEsales\Eshop\Application\Controller\FrontendController
+class FrontendController extends MaxpayFrontendController
 {
-    /**
-     * @var \Maxpay\MaxpayModule\Core\Logger
-     */
-    protected $logger = null;
-
-    /**
-     * @var \Maxpay\MaxpayModule\Core\Config
-     */
-    protected $maxpayConfig = null;
-
-    public function postback()
-    {
-        echo 'postback processing here';
+    public function __construct(): null {
+        parent::__construct();
+        $this->logger->setTitle('Postback request');
     }
     
     /**
-     * Return Maxpay logger
-     *
-     * @return \Maxpay\MaxpayModule\Core\Logger
+     * Postback request processing.
+     * @return void
+     * @throws \Exception
      */
-    public function getLogger()
+    public function postback(): void
     {
-        if (is_null($this->logger)) {
-            $session = \OxidEsales\Eshop\Core\Registry::getSession();
-            $this->logger = oxNew(\Maxpay\MaxpayModule\Core\Logger::class);
-            $this->logger->setLoggerSessionId($session->getId());
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            exit('Incorrect request type');
         }
-
-        return $this->logger;
-    }
-
-    /**
-     * Return Maxpay config.
-     *
-     * @return \Maxpay\MaxpayModule\Core\Config
-     */
-    public function getMaxpayConfig()
-    {
-        if (is_null($this->maxpayConfig)) {
-            $this->setMaxpayConfig(oxNew(\Maxpay\MaxpayModule\Core\Config::class));
+        
+        $headers = $this->getHeaders();
+        $dataJson = file_get_contents('php://input');
+        
+        if ($dataJson && $headers) {
+            $this->maxpayService->processPostback($dataJson, $headers);
         }
-
-        return $this->maxpayConfig;
     }
-
+    
     /**
-     * Set Maxpay config.
-     *
-     * @param \Maxpay\MaxpayModule\Core\Config $maxpayConfig config
+     * Retrieve headers from request.
+     * @return array
      */
-    public function setMaxpayConfig($maxpayConfig)
+    private function getHeaders()
     {
-        $this->maxpayConfig = $maxpayConfig;
-    }
-
-    /**
-     * Logs passed value.
-     *
-     * @param mixed $value
-     */
-    public function log($value)
-    {
-        if ($this->getMaxpayConfig()->isLoggingEnabled()) {
-            $this->getLogger()->log($value);
+        $headers = [];
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
         }
+        return $headers;
     }
 }

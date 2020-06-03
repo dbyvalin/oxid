@@ -1,16 +1,15 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Core;
 
 /**
- * Maxpay config class
+ * Maxpay config class.
  */
 class Config
 {
-
     /**
      * Maxpay module id.
      *
@@ -44,7 +43,7 @@ class Config
      *
      * @return string
      */
-    public function getModuleId()
+    public function getModuleId(): string
     {
         return $this->maxpayId;
     }
@@ -54,7 +53,7 @@ class Config
      *
      * @param string $maxpayHost
      */
-    public function setMaxpayHost($maxpayHost)
+    public function setMaxpayHost(string $maxpayHost): void
     {
         $this->maxpayHost = $maxpayHost;
     }
@@ -64,40 +63,38 @@ class Config
      *
      * @return string
      */
-    public function getMaxpayHost()
+    public function getMaxpayHost(): string
     {
         return $this->maxpayHost;
     }
 
     /**
-     * Returns true if logging request/response to Maxpay is enabled
+     * Returns true if logging request to Maxpay is enabled.
      *
      * @return bool
      */
-    public function isLoggingEnabled()
+    public function isLoggingEnabled(): bool
     {
         return $this->getParameter('blMaxpayLoggerEnabled');
     }
 
     /**
-     * Returns true of sandbox mode is ON
+     * Check if sandbox mode is enabled.
      *
      * @return bool
      */
-    public function isSandboxEnabled()
+    public function isSandboxEnabled(): bool
     {
         return $this->getParameter('blMaxpaySandboxMode');
     }
 
     /**
-     * Returns SSL or non SSL shop URL without index.php depending on Mall
-     * affecting environment is admin mode and current ssl usage status
-     *
+     * Get shop url.
+     * 
      * @param bool $admin if admin
-     *
      * @return string
      */
-    public function getShopUrl($admin = null)
+    public function getShopUrl($admin = null): string
     {
         return \OxidEsales\Eshop\Core\Registry::getConfig()->getCurrentShopUrl($admin);
     }
@@ -107,41 +104,9 @@ class Config
      *
      * @return \OxidEsales\Eshop\Core\Language
      */
-    public function getLang()
+    public function getLang(): \OxidEsales\Eshop\Core\Language
     {
         return \OxidEsales\Eshop\Core\Registry::getLang();
-    }
-
-    /**
-     * Wrapper to get utils object from registry.
-     *
-     * @return \OxidEsales\Eshop\Core\Utils
-     */
-    public function getUtils()
-    {
-        return \OxidEsales\Eshop\Core\Registry::getUtils();
-    }
-
-    /**
-     * Returns shop charset
-     *
-     * @return string
-     */
-    public function getCharset()
-    {
-        $charset = 'UTF-8';
-
-        return $charset;
-    }
-
-    /**
-     * Returns current URL
-     *
-     * @return string
-     */
-    public function getCurrentUrl()
-    {
-        return \OxidEsales\Eshop\Core\Registry::getUtilsUrl()->getCurrentUrl();
     }
 
     /**
@@ -151,7 +116,7 @@ class Config
      *
      * @return string partner code.
      */
-    public function getPartnerCode()
+    public function getPartnerCode(): string
     {
         $facts = new \OxidEsales\Facts\Facts();
         $key = $this->isShortcutPayment() ? self::PARTNERCODE_SHORTCUT_KEY : $facts->getEdition();
@@ -160,27 +125,27 @@ class Config
     }
 
     /**
-     * Returns active shop id
+     * Returns active shop id.
      *
-     * @return string
+     * @return integer
      */
-    protected function getShopId()
+    protected function getShopId(): int
     {
         return \OxidEsales\Eshop\Core\Registry::getConfig()->getShopId();
     }
 
     /**
-     * Returns oxConfig instance
+     * Returns oxConfig instance.
      *
      * @return \OxidEsales\Eshop\Core\Config
      */
-    protected function getConfig()
+    protected function getConfig(): \OxidEsales\Eshop\Core\Config
     {
         return \OxidEsales\Eshop\Core\Registry::getConfig();
     }
 
     /**
-     * Retrieve apropriate publick key.
+     * Retrieve apropriate (sandbox/prod) publick key.
      * @return string
      */
     public function getPublicKey(): string
@@ -195,7 +160,7 @@ class Config
     }
     
     /**
-     * Retrieve apropriate private key.
+     * Retrieve apropriate (sandbox/prod) private key.
      * @return string
      */
     public function getPrivateKey(): string
@@ -210,9 +175,9 @@ class Config
     }
     
     /**
-     * Returns module config parameter value
+     * Returns module config parameter value.
      *
-     * @param string $paramName parameter name
+     * @param string $paramName Parameter name.
      *
      * @return mixed
      */

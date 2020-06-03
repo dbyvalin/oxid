@@ -1,6 +1,6 @@
 <?php
 /**
-* This file is part of OXID eSales Maxpay module.
+* This file is part of OXID Maxpay module.
 */
 
 // -------------------------------

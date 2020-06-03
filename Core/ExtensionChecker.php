@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Core;
@@ -11,35 +11,36 @@ namespace Maxpay\MaxpayModule\Core;
 class ExtensionChecker
 {
     /**
-     * Shop id
+     * Shop id.
      *
      * @var string
      */
     protected $shopId = null;
 
     /**
-     * Extension id
+     * Extension id.
      *
      * @var string
      */
     protected $extensionId = '';
 
     /**
-     * Set shop id
+     * Set shop id.
      *
-     * @param string $shopId shop id
+     * @param string $shopId
+     * @return void
      */
-    public function setShopId($shopId)
+    public function setShopId(string $shopId): void
     {
         $this->shopId = $shopId;
     }
 
     /**
-     * Return shop id
+     * Return shop id.
      *
      * @return string
      */
-    public function getShopId()
+    public function getShopId(): string
     {
         if (is_null($this->shopId)) {
             $this->setShopId(\OxidEsales\Eshop\Core\Registry::getConfig()->getShopId());
@@ -49,53 +50,54 @@ class ExtensionChecker
     }
 
     /**
-     * Set extension id
+     * Set extension id.
      *
-     * @param string $extensionId extension id
+     * @param string $extensionId
+     * @return void
      */
-    public function setExtensionId($extensionId)
+    public function setExtensionId(string $extensionId): void
     {
         $this->extensionId = $extensionId;
     }
 
     /**
-     * Return extension id
+     * Return extension id.
      *
      * @return string
      */
-    public function getExtensionId()
+    public function getExtensionId(): string
     {
         return $this->extensionId;
     }
 
     /**
-     * Return return extended classes array
+     * Return extended classes array.
      *
      * @return array
      */
-    protected function getExtendedClasses()
+    protected function getExtendedClasses(): array
     {
         return $this->getConfigValue('aModules');
     }
 
     /**
-     * Return disabled modules array
+     * Return disabled modules array.
      *
      * @return array
      */
-    protected function getDisabledModules()
+    protected function getDisabledModules(): array
     {
         return $this->getConfigValue('aDisabledModules');
     }
 
     /**
-     * Return config value
+     * Return config value.
      *
-     * @param string $configName - config parameter name were stored arrays od extended classes
+     * @param string $configName
      *
      * @return array
      */
-    protected function getConfigValue($configName)
+    protected function getConfigValue($configName): array
     {
         $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
         $config = \OxidEsales\Eshop\Core\Registry::getConfig();
@@ -112,7 +114,7 @@ class ExtensionChecker
      *
      * @return  bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         $moduleId = $this->getExtensionId();
         $moduleIsActive = false;

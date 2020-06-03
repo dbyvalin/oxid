@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Controller;
@@ -10,22 +10,20 @@ namespace Maxpay\MaxpayModule\Controller;
  */
 class ThankYouController extends ThankYouController_parent
 {
-    const DECLINE_STATUS = 'decline';
-    
-    /** Transaction is finished successfully. */
-    const MAXPAY_PAYMENT_OK = 'Awaiting Maxpay payment';
-    
-    /** Transaction is not finished or failed. */
-    const MAXPAY_PAYMENT_ERROR = 'ERROR';
+    const MAXPAY_PAYMENT_DECLINE_STATUS = 'decline';
     
     public function render()
     {
         return parent::render();
     }
     
-    public function checkOrderProcessing()
+    /**
+     * Thankyou page post processing.
+     * @return boolean
+     */
+    public function checkOrderProcessing(): bool
     {
-        if (!$_POST) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             return false;
         }
         
@@ -33,18 +31,14 @@ class ThankYouController extends ThankYouController_parent
         
         $order = $this->getOrder();
         
-        if ($transactionStatus === self::DECLINE_STATUS) {
+        $code = trim(strip_tags($_POST['code'] ?? ''));                    
+        $message = trim(strip_tags($_POST['message'] ?? ''));
             
-            $order->changeOrderStatus(self::MAXPAY_PAYMENT_ERROR);
-            
-            $declineMessage = trim(strip_tags($_POST['message']));
-            $declineCode = trim(strip_tags($_POST['code']));
-            
-            $logMessage = 'Payment declined. ' . $declineMessage . ' (' . $declineCode . ')';
-            
+        if ($transactionStatus === self::MAXPAY_PAYMENT_DECLINE_STATUS) {
+            $order->setOrderErrorStatus('Payment declined. ' . $message . ' (' . $code . ')');
             return false;
         } else {
-            $order->changeOrderStatus(self::MAXPAY_PAYMENT_OK);
+            $order->setOrderSuccessStatus('Payment processing. ' . $message . ' (' . $code . ')');
         }
         
         return true;

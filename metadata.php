@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 
 /**
@@ -26,7 +26,6 @@ $aModule = array(
     'extend'       => array(
         \OxidEsales\Eshop\Core\ViewConfig::class                              => \Maxpay\MaxpayModule\Core\ViewConfig::class,
         \OxidEsales\Eshop\Application\Controller\PaymentController::class     => \Maxpay\MaxpayModule\Controller\PaymentController::class,
-        \OxidEsales\Eshop\Application\Controller\WrappingController::class    => \Maxpay\MaxpayModule\Controller\WrappingController::class,
         \OxidEsales\Eshop\Application\Controller\ThankYouController::class    => \Maxpay\MaxpayModule\Controller\ThankYouController::class,
         \OxidEsales\Eshop\Application\Controller\FrontendController::class    => \Maxpay\MaxpayModule\Controller\FrontendController::class,
         \OxidEsales\Eshop\Application\Model\User::class                       => \Maxpay\MaxpayModule\Model\User::class,
@@ -35,13 +34,17 @@ $aModule = array(
     ),
     'controllers' => array(
         'maxpaystandarddispatcher'        => \Maxpay\MaxpayModule\Controller\StandardDispatcher::class,
-        'maxpayorder'                     => \Maxpay\MaxpayModule\Controller\FrontendController::class
+        'maxpayorder'                     => \Maxpay\MaxpayModule\Controller\FrontendController::class,
+        'maxpayrefund_maxpay'              => \Maxpay\MaxpayModule\Controller\Admin\RefundController::class
     ),
     'events'       => array(
         'onActivate'   => '\Maxpay\MaxpayModule\Core\Events::onActivate',
         'onDeactivate' => '\Maxpay\MaxpayModule\Core\Events::onDeactivate'
     ),
     'templates' => array(
+        'order_maxpay.tpl' => 'maxpay/views/admin/tpl/order_maxpay.tpl',
+        'refund_success.tpl' => 'maxpay/views/admin/tpl/refund_success.tpl',
+        'refund_failed.tpl' => 'maxpay/views/admin/tpl/refund_failed.tpl',
     ),
     'blocks' => array(
         array('template' => 'page/checkout/payment.tpl',          'block'=>'select_payment',                        'file'=>'/views/tpl/maxpaypaymentselector.tpl'),

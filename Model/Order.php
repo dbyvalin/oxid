@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of OXID eSales Maxpay module.
+ * This file is part of OXID Maxpay module.
  */
 
 namespace Maxpay\MaxpayModule\Model;
@@ -12,15 +12,35 @@ namespace Maxpay\MaxpayModule\Model;
  */
 class Order extends Order_parent
 {
+    use CommonTrait;
+    
     /**
      * Maxpay order information
      *
-     * @var \Maxpay\MaxpayModule\Model\MaxpayOrder
+     * @var \Maxpay\MaxpayModule\Model\Order
      */
     protected $maxpayOrder = null;
+    
+    /** Transaction is processing successfully. */
+    const MAXPAY_PAYMENT_PROCESSING = 'Awaiting Maxpay payment';
+    
+    /** Transaction is finished successfully. */
+    const MAXPAY_PAYMENT_COMPLETED = 'Maxpay payment completed';
+    
+    /** Transaction is finished successfully. */
+    const MAXPAY_PAYMENT_REFUNDED = 'Maxpay payment refunded';
+    
+    /** Transaction is not finished or failed. */
+    const MAXPAY_PAYMENT_ERROR = 'ERROR';    
 
+    public function __construct() {
+        $this->getLogger();
+        $this->logger->setTitle('Order status update');
+        parent::__construct();
+    }
+    
     /**
-     * Loads order associated with current Maxpay order
+     * Loads order associated with current Maxpay order.
      *
      * @return bool
      */
@@ -28,7 +48,6 @@ class Order extends Order_parent
     {
         $orderId = \OxidEsales\Eshop\Core\Registry::getSession()->getVariable("sess_challenge");
 
-        // if order is not created yet - generating it
         if ($orderId === null) {
             $orderId = \OxidEsales\Eshop\Core\UtilsObject::getInstance()->generateUID();
             $this->setId($orderId);
@@ -42,71 +61,33 @@ class Order extends Order_parent
     /**
      * Updates order number.
      *
-     * @return bool
+     * @return void
      */
-    public function maxpayUpdateOrderNumber()
+    public function maxpayUpdateOrderNumber(): void
     {
         if ($this->oxorder__oxordernr->value) {
-            $updated = (bool) oxNew(\OxidEsales\Eshop\Core\Counter::class)->update($this->_getCounterIdent(), $this->oxorder__oxordernr->value);
+            oxNew(\OxidEsales\Eshop\Core\Counter::class)->update($this->_getCounterIdent(), $this->oxorder__oxordernr->value);
         } else {
-            $updated = $this->_setNumber();
+            $this->_setNumber();
         }
-
-        return $updated;
     }
-
+    
     /**
-     * Updates order transaction status, ID and date.
-     *
-     * @param string $transactionId Order transaction ID
+     * Retrieve order status.
+     * @return string
      */
-    protected function setPaymentInfoMaxpayOrder($transactionId)
+    public function getOrderStatus(): string
     {
-        // set transaction ID and payment date to order
-        $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
-
-        $query = 'update oxorder set oxtransid=' . $db->quote($transactionId) . ' where oxid=' . $db->quote($this->getId());
-        $db->execute($query);
-
-        //updating order object
-        $this->oxorder__oxtransid = new \OxidEsales\Eshop\Core\Field($transactionId);
-    }
-
-    /**
-     * Finalizes Maxpay order.
-     *
-     * @param \OxidEsales\Eshop\Application\Model\Basket                               $basket          Basket object.
-     */
-    public function finalizeMaxpayOrder($basket)
-    {
-        $maxpayOrder = $this->getMaxpayOrder();
-        $maxpayOrder->setPaymentStatus(self::MAXPAY_PAYMENT_AWAITING);
-        $maxpayOrder->save();
-    }
-
-    /**
-     * Paypal specific status checking.
-     *
-     * If status comes as OK, lets check real paypal payment state,
-     * and if really ok, so lets set it, otherwise dont change status.
-     *
-     * @param string $status order transaction status
-     */
-    protected function _setOrderStatus($status)
-    {
-        $paymentTypeObject = $this->getPaymentType();
-        $paymentType = $paymentTypeObject ? $paymentTypeObject->getFieldData('oxpaymentsid') : null;
-        if ($paymentType != 'oxidpaypal' || $status != self::OEPAYPAL_TRANSACTION_STATUS_OK) {
-            parent::_setOrderStatus($status);
-        }
+        return $this->oxorder__oxtransstatus->value ?? '';
     }
 
     /**
      * Update order oxpaid to current time.
+     * @return void
      */
-    public function markOrderPaid()
+    public function markOrderAsPaid(): void
     {
-        parent::_setOrderStatus(self::MAXPAY_PAYMENT_OK);
+        parent::_setOrderStatus(self::MAXPAY_PAYMENT_COMPLETED);
 
         $db = \OxidEsales\Eshop\Core\DatabaseProvider::getDb();
         $utilsDate = \OxidEsales\Eshop\Core\Registry::getUtilsDate();
@@ -119,121 +100,35 @@ class Order extends Order_parent
         $this->oxorder__oxpaid = new \OxidEsales\Eshop\Core\Field($date);
     }
     
-    public function changeOrderStatus(string $status)
+    /**
+     * Update order status to Processing.
+     * @param string $message
+     * @return void
+     */
+    public function setOrderSuccessStatus(string $message = ''): void
     {
-        parent::_setOrderStatus($status);
+        $this->logger->log($message);
+        parent::_setOrderStatus(self::MAXPAY_PAYMENT_PROCESSING);
     }
     
     /**
-     * Checks if delivery set used for current order is available and active.
-     * Throws exception if not available
-     *
-     * @param \OxidEsales\Eshop\Application\Model\Basket $basket basket object
-     *
-     * @return int
+     * Update order status to Error.
+     * @param string $message
+     * @return void
      */
-    public function validateDelivery($basket)
+    public function setOrderErrorStatus(string $message = ''): void
     {
-        if ($basket->getPaymentId() == 'oxidpaypal') {
-            $shippingId = $basket->getShippingId();
-            $basketPrice = $basket->getPrice()->getBruttoPrice();
-            $user = oxNew(\OxidEsales\Eshop\Application\Model\User::class);
-            if (!$user->loadUserPayPalUser()) {
-                $user = $this->getUser();
-            }
-
-            $validState = null;
-            if (!$this->isPayPalPaymentValid($user, $basketPrice, $shippingId)) {
-                $validState = self::ORDER_STATE_INVALIDDELIVERY;
-            }
-        } else {
-            $validState = parent::validateDelivery($basket);
-        }
-
-        return $validState;
+        $this->logger->log($message);
+        parent::_setOrderStatus(self::MAXPAY_PAYMENT_ERROR);
     }
-
+    
     /**
-     * Returns PayPal order object.
-     *
-     * @param string $oxId
-     *
-     * @return \OxidEsales\PayPalModule\Model\PayPalOrder|null
+     * Update order status to Refund.
+     * @return void
      */
-    public function getPayPalOrder($oxId = null)
+    public function setOrderRefundStatus(): void
     {
-        if (is_null($this->payPalOrder)) {
-            $orderId = is_null($oxId) ? $this->getId() : $oxId;
-            $order = oxNew(\OxidEsales\PayPalModule\Model\PayPalOrder::class);
-            $order->load($orderId);
-            $this->payPalOrder = $order;
-        }
-
-        return $this->payPalOrder;
-    }
-
-    /**
-     * Get payment status
-     *
-     * @return string
-     */
-    public function getPayPalPaymentStatus()
-    {
-        return $this->getPayPalOrder()->getPaymentStatus();
-    }
-
-    /**
-     * Returns PayPal Authorization id.
-     *
-     * @return string
-     */
-    public function getAuthorizationId()
-    {
-        return $this->oxorder__oxtransid->value;
-    }
-
-    /**
-     * Checks whether PayPal payment is available.
-     *
-     * @param object $user
-     * @param double $basketPrice
-     * @param string $shippingId
-     *
-     * @return bool
-     */
-    protected function isPayPalPaymentValid($user, $basketPrice, $shippingId)
-    {
-        $valid = true;
-
-        $payPalPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
-        $payPalPayment->load('oxidpaypal');
-        if (!$payPalPayment->isValidPayment(null, null, $user, $basketPrice, $shippingId)) {
-            $valid = $this->isEmptyPaymentValid($user, $basketPrice, $shippingId);
-        }
-
-        return $valid;
-    }
-
-    /**
-     * Checks whether Empty payment is available.
-     *
-     * @param object $user
-     * @param double $basketPrice
-     * @param string $shippingId
-     *
-     * @return bool
-     */
-    protected function isEmptyPaymentValid($user, $basketPrice, $shippingId)
-    {
-        $valid = true;
-
-        $emptyPayment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
-        $emptyPayment->load('oxempty');
-        if (!$emptyPayment->isValidPayment(null, null, $user, $basketPrice, $shippingId)) {
-            $valid = false;
-        }
-
-        return $valid;
+        parent::_setOrderStatus(self::MAXPAY_PAYMENT_REFUNDED);
     }
 
     /**
@@ -241,13 +136,13 @@ class Order extends Order_parent
      *
      * @param string $oxId
      *
-     * @return \Maxpay\MaxpayModule\Model\MaxpayOrder|null
+     * @return \Maxpay\MaxpayModule\Model\Order|null
      */
     public function getMaxpayOrder($oxId = null)
     {
         if (is_null($this->maxpayOrder)) {
             $orderId = is_null($oxId) ? $this->getId() : $oxId;
-            $order = oxNew(\Maxpay\MaxpayModule\Model\MaxpayOrder::class);
+            $order = oxNew(\Maxpay\MaxpayModule\Model\Order::class);
             $order->load($orderId);
             $this->maxpayOrder = $order;
         }
