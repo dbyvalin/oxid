@@ -18,6 +18,10 @@ class User extends User_parent
      */
     public function getDetails(): array
     {
+        $oCountry = oxNew('oxcountry');
+        $oCountry->load($this->oxuser__oxcountryid->value);
+        $userCountryCode = $oCountry->oxcountry__oxisoalpha2->value;
+        
         $details = [
             'customer_id' => $this->oxuser__oxcustnr->value,
             'email' => $this->oxuser__oxusername->value,
@@ -26,7 +30,8 @@ class User extends User_parent
             'address' => $this->oxuser__oxstreet->value . ' ' . $this->oxuser__oxstreetnr->value,
             'city' => $this->oxuser__oxcity->value,
             'zip' => $this->oxuser__oxzip->value,
-            'country' => $this->oxuser__oxcountryid->value,
+            'country' => $userCountryCode,
+            'phone' => $this->oxuser__oxfon->value,
         ];
         
         return $details;
