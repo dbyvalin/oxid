@@ -22,9 +22,6 @@ class FrontendController extends MaxpayFrontendController
      */
     public function postback(): void
     {
-        echo '<pre>';
-        var_dump(132);
-        die;
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             exit('Incorrect request type');
         }
