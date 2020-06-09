@@ -30,7 +30,7 @@ class FrontendController extends MaxpayFrontendController
         $dataJson = file_get_contents('php://input');
         
         if ($dataJson && $headers) {
-            $this->maxpayService->processPostback($dataJson, $headers);
+            $this->logger->log($this->maxpayService->processPostback($dataJson, $headers));
         }
     }
     
