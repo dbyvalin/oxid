@@ -26,7 +26,7 @@ class User extends User_parent
             'address' => $this->oxuser__oxstreet->value . ' ' . $this->oxuser__oxstreetnr->value,
             'city' => $this->oxuser__oxcity->value,
             'zip' => $this->oxuser__oxzip->value,
-            'country' => $this->oxuser__oxcountry->value,
+            'country' => $this->oxuser__oxcountryid->value,
         ];
         
         return $details;
