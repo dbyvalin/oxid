@@ -87,23 +87,9 @@ class Logger
         $handle = fopen($this->getLogFilePath(), "a+");
         
         if ($handle !== false) {
-            if (is_string($logData)) {
-                parse_str($logData, $result);
-            } else {
-                $result = $logData;
-            }
-
-            if (is_array($result)) {
-                foreach ($result as $key => $value) {
-                    if (is_string($value)) {
-                        $result[$key] = urldecode($value);
-                    }
-                }
-            }
-
             fwrite($handle, "======================= " . $this->getTitle() . " [" . date("Y-m-d H:i:s") . "] ======================= #\n\n");
             fwrite($handle, "SESS ID: " . $this->getLoggerSessionId() . "\n");
-            fwrite($handle, trim(var_export($result, true)) . "\n\n");
+            fwrite($handle, "Message: " . $logData . "\n\n");
             fclose($handle);
         }
 
