@@ -77,6 +77,7 @@ class PaymentGateway extends PaymentGateway_parent
                 'zip' => $userDetails['zip'],
                 'address' => $userDetails['address'],
                 'country' => $userDetails['country'],
+                'phone' => $userDetails['phone'],
             ];
             
             if ($order && $orderId) {
