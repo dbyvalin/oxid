@@ -9,7 +9,8 @@ namespace Maxpay\MaxpayModule\Controller;
  */
 class FrontendController extends MaxpayFrontendController
 {
-    public function __construct(): null {
+    public function __construct()
+    {
         parent::__construct();
         $this->logger->setTitle('Postback request');
     }
@@ -21,6 +22,9 @@ class FrontendController extends MaxpayFrontendController
      */
     public function postback(): void
     {
+        echo '<pre>';
+        var_dump(132);
+        die;
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             exit('Incorrect request type');
         }
