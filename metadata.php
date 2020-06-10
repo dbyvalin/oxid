@@ -53,7 +53,6 @@ $aModule = array(
     'settings' => array(
         array('group' => 'maxpay_settings',         'name' => 'sMaxpayPublickKey',              'type' => 'str',      'value' => ''),
         array('group' => 'maxpay_settings',         'name' => 'sMaxpayPrivateKey',              'type' => 'str',      'value' => ''),
-        array('group' => 'maxpay_development', 'name' => 'blMaxpayLoggerEnabled',           'type' => 'bool',     'value' => 'true'),
         array('group' => 'maxpay_development', 'name' => 'blMaxpaySandboxMode',             'type' => 'bool',     'value' => 'false'),
         array('group' => 'maxpay_development', 'name' => 'sMaxpayTestPublicKey',            'type' => 'str',      'value' => ''),
         array('group' => 'maxpay_development', 'name' => 'sMaxpayTestPrivateKey',           'type' => 'str',      'value' => ''),

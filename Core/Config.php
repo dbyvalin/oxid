@@ -69,16 +69,6 @@ class Config
     }
 
     /**
-     * Returns true if logging request to Maxpay is enabled.
-     *
-     * @return bool
-     */
-    public function isLoggingEnabled(): bool
-    {
-        return $this->getParameter('blMaxpayLoggerEnabled');
-    }
-
-    /**
      * Check if sandbox mode is enabled.
      *
      * @return bool

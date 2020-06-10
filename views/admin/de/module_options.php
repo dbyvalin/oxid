@@ -19,7 +19,4 @@ $aLang = array(
     'SHOP_MODULE_sMaxpayTestPublicKey'                       => 'Sandbox public key',
     'SHOP_MODULE_sMaxpayTestPrivateKey'                      => 'Sandbox private key',
     'HELP_SHOP_MODULE_sMaxpayTestPrivateKey'                 => 'Loggen Sie sich in Ihr <a target="_blank" href="https://my.maxpay.com">MaxPay-Konto</a> ein, um Ihre Private Key für die MaxPay-Sandbox zu erhalten.',
-
-    'SHOP_MODULE_blMaxpayLoggerEnabled'                      => 'MaxPay Logging aktivieren',
-
 );
