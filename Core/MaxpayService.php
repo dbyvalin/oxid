@@ -69,7 +69,7 @@ class MaxpayService
         $currency = $order->getOrderCurrency();
         $response = $scriney->refund($order->getId(), $amount, $currency->name);
 
-        if ($scriney->validateApiResult($response) && ($response['status'] == self::REFUND_SUCCESS_STATUS)) {
+        if ($scriney->validateApiResult($response) && (strtolower($response['status']) == self::REFUND_SUCCESS_STATUS)) {
             $order->setOrderRefundStatus();
             $result['message'] = "Order #" . $order->getId() . ", full refund message: " . $response['message'];
             $result['status'] = true;
