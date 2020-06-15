@@ -30,7 +30,7 @@ class ViewConfig extends ViewConfig_parent
     }
     
     /**
-     * Retrieve order status.
+     * Check if order has been already refunded.
      * @param string $orderId
      * @return string
      */
@@ -38,5 +38,16 @@ class ViewConfig extends ViewConfig_parent
     {
         $order = oxNew(\OxidEsales\Eshop\Application\Model\Order::class)->getMaxpayOrder($orderId);
         return $order->getOrderStatus() === $order::MAXPAY_PAYMENT_REFUNDED;
+    }
+    
+    /**
+     * Check if order payment is completed.
+     * @param string $orderId
+     * @return string
+     */
+    public function isOrderCompleted(string $orderId): string
+    {
+        $order = oxNew(\OxidEsales\Eshop\Application\Model\Order::class)->getMaxpayOrder($orderId);
+        return $order->getOrderStatus() === $order::MAXPAY_PAYMENT_COMPLETED;
     }
 }

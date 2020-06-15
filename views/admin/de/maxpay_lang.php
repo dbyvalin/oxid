@@ -16,4 +16,5 @@ $aLang = array(
     'ORDER_REFUND_BUTTON'                  => 'Rückerstattungsauftrag',
     'ORDER_REFUND_FAILED'                  => 'Auftragsrückerstattung fehlgeschlagen!',
     'ORDER_REFUND_SUCCESS'                 => 'Bestellung erfolgreich erstattet!',
+    'ORDER_NOT_YET_COMPLETED'              => 'Die Zahlung der Bestellung wurde noch nicht abgeschlossen!',
 );

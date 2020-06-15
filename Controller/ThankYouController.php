@@ -27,12 +27,12 @@ class ThankYouController extends ThankYouController_parent
             return false;
         }
         
-        $transactionStatus = oxRegistry::getConfig()->getRequestParameter('status');
+        $transactionStatus = \oxRegistry::getConfig()->getRequestParameter('status');
         
         $order = $this->getOrder();
         
-        $code = oxRegistry::getConfig()->getRequestParameter('code', '');                    
-        $message = oxRegistry::getConfig()->getRequestParameter('message', '');
+        $code = \oxRegistry::getConfig()->getRequestParameter('code', '');                    
+        $message = \oxRegistry::getConfig()->getRequestParameter('message', '');
             
         if ($transactionStatus === self::MAXPAY_PAYMENT_DECLINE_STATUS) {
             $order->setOrderErrorStatus('Payment declined. ' . $message . ' (' . $code . ')');

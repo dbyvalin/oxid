@@ -16,4 +16,5 @@ $aLang = array(
     'ORDER_REFUND_BUTTON'                  => 'Refund order',
     'ORDER_REFUND_FAILED'                  => 'Order refund failed!',
     'ORDER_REFUND_SUCCESS'                 => 'Order successfully refunded!',
+    'ORDER_NOT_YET_COMPLETED'              => 'Order payment has not been completed yet!',
 );
