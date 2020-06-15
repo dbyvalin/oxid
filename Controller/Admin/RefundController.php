@@ -88,9 +88,9 @@ class RefundController extends MaxpayAdminController
      */
     public function refund(): void
     {
-        if ($_POST && $this->isMaxpayOrder()) {
+        if (($_SERVER['REQUEST_METHOD'] === 'POST') && $this->isMaxpayOrder()) {
             
-            $orderId = $_POST['oxid'] ?? null;
+            $orderId = oxRegistry::getConfig()->getRequestParameter('oxid', null);
         
             if ($orderId) {
                 $order = oxNew(\OxidEsales\Eshop\Application\Model\Order::class)->getMaxpayOrder($orderId);

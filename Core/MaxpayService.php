@@ -122,10 +122,9 @@ class MaxpayService
     /**
      * Redirects to Maxpay external payment page.
      * @param array $data
-     * @param array $headers
      * @return void
      */
-    public function redirect(array $data, array $headers = []): void
+    public function redirect(array $data): void
     {
         
         $url = $this->maxpayConfig->getMaxpayHost()

@@ -11,9 +11,9 @@ $sLangName = 'Deutsch';
 $aLang = array(
     'charset'                              => 'UTF-8',
     'tbclorder_maxpay'                     => 'Maxpay',
-    'MAXPAY_ONLY_PAYMENT'                  => 'This tab is for Orders with Maxpay payment method only!',
+    'MAXPAY_ONLY_PAYMENT'                  => 'Diese Registerkarte gilt nur für Bestellungen mit Maxpay-Zahlungsmethode!',
     'ORDER_ALREADY_REFUNDED'               => 'Order already refunded!',
-    'ORDER_REFUND_BUTTON'                  => 'Refund order',
-    'ORDER_REFUND_FAILED'                  => 'Order refund failed!',
-    'ORDER_REFUND_SUCCESS'                 => 'Order successfully refunded!',
+    'ORDER_REFUND_BUTTON'                  => 'Rückerstattungsauftrag',
+    'ORDER_REFUND_FAILED'                  => 'Auftragsrückerstattung fehlgeschlagen!',
+    'ORDER_REFUND_SUCCESS'                 => 'Bestellung erfolgreich erstattet!',
 );
