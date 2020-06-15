@@ -1,7 +1,9 @@
 Maxpay payment module for OXID 6.2 or higher.
 
 INSTALLATION:
-Module is installed via composer or manually. 
+Module is installed via composer or manually. During manual installation do not 
+forget to run composer install/update to include module path to autoload. 
+
 
 GENERAL SETUP:
 1. Login/register to https://my.maxpay.com
