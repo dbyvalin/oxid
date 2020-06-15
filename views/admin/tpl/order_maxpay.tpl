@@ -11,7 +11,7 @@
 <br/>
 [{if $oViewConf->isOrderRefunded($oxid)}]
 <h4>[{oxmultilang ident="ORDER_ALREADY_REFUNDED"}]</h4>
-[{else if !$oViewConf->isOrderCompleted($oxid)}]
+[{elseif !$oViewConf->isOrderCompleted($oxid)}]
 <h4>[{oxmultilang ident="ORDER_NOT_YET_COMPLETED"}]</h4>
 [{else}]
 <form name="refund-form" id="refund-form" action="[{$oViewConf->getSelfLink()}]" method="post">
