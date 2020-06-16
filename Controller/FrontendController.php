@@ -9,6 +9,9 @@ namespace Maxpay\MaxpayModule\Controller;
  */
 class FrontendController extends MaxpayFrontendController
 {
+    
+    protected $_sThisTemplate = 'postback.tpl';
+    
     public function __construct()
     {
         parent::__construct();

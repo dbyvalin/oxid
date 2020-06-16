@@ -37,7 +37,7 @@ class ThankYouController extends ThankYouController_parent
         if ($transactionStatus === self::MAXPAY_PAYMENT_DECLINE_STATUS) {
             $order->setOrderErrorStatus('Payment declined. ' . $message . ' (' . $code . ')');
             return false;
-        } else {
+        } elseif ($order->getOrderStatus() !== $order::MAXPAY_PAYMENT_COMPLETED) {
             $order->setOrderSuccessStatus('Payment processing. ' . $message . ' (' . $code . ')');
         }
         

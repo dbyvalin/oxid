@@ -45,6 +45,7 @@ $aModule = array(
         'order_maxpay.tpl' => 'maxpay/views/admin/tpl/order_maxpay.tpl',
         'refund_success.tpl' => 'maxpay/views/admin/tpl/refund_success.tpl',
         'refund_failed.tpl' => 'maxpay/views/admin/tpl/refund_failed.tpl',
+        'postback.tpl' => 'maxpay/views/tpl/postback.tpl',
     ),
     'blocks' => array(
         array('template' => 'page/checkout/payment.tpl',          'block'=>'select_payment',                        'file'=>'/views/tpl/maxpaypaymentselector.tpl'),
